@@ -2,7 +2,7 @@
 
 public class MySample : MonoBehaviour
 {
-    private void Test()
+    private void BaseTest()
     {
         // 设置父子关系，unity这种父子关系都是通过transform组件完成
         var parent = this.transform.parent.gameObject;
@@ -54,22 +54,38 @@ public class MySample : MonoBehaviour
         var screenPosition = Camera.main.WorldToScreenPoint(worldPosition);
     }
 
-
-    void Start()
+    private void InputTest()
     {
-        var source = GameObject.Find("飞机");
-        var target = GameObject.Find("角色");
-
-        var face = source.transform.up;
-        var direction = target.transform.position - source.transform.position;
-        var angle = Vector3.SignedAngle(face, direction, Vector3.forward);
-
-        source.transform.Rotate(Vector3.forward, angle);
+        // 0鼠标左键，1鼠标右键，2鼠标中键
+        if (Input.GetMouseButtonDown(0))
+        {
+            // position代表屏幕坐标
+            Debug.Log("鼠标左键" + Input.mousePosition);
+        }
     }
+
 
     // Update is called once per frame
     void Update()
     {
         this.transform.Translate(0F, 1.2F * Time.deltaTime, 0F, Space.Self);
+
+        if (Input.GetMouseButton(0))
+        {
+            var pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            pos.z = 0F;
+            ToDirection(pos);
+        }
+    }
+
+    private void ToDirection(Vector3 targetPosition)
+    {
+        var source = GameObject.Find("飞机");
+
+        var face = source.transform.up;
+        var direction = targetPosition - source.transform.position;
+        var angle = Vector3.SignedAngle(face, direction, Vector3.forward);
+
+        source.transform.Rotate(Vector3.forward, angle);
     }
 }
